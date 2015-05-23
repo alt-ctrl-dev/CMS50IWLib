@@ -1,0 +1,12 @@
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/MonoAndroid,Version=v5.0.AssemblyAttribute.cs
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/CMS50IWLib.obj.Debug.__AndroidLibraryProjects__.zip
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/CMS50IWLib.dll.mdb
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/CMS50IWLib.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/CMS50IWLib.CMS50IWLib.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/android/bin/CMS50IWLib.CMS50IWLib.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/res/values/strings.xml
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/R.cs.flag
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/CMS50IWLib.CMS50IWLib-Signed.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/uploadflags.txt
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/CMS50IWLib.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/CMS50IWLib.dll.mdb

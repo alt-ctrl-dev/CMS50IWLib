@@ -1,0 +1,12 @@
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/MonoAndroid,Version=v5.0.AssemblyAttribute.cs
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/CMS50IWLib.obj.Release.__AndroidLibraryProjects__.zip
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Release/CMS50IWLib.dll.mdb
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Release/CMS50IWLib.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Release/CMS50IWLib.CMS50IWLib.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/android/bin/CMS50IWLib.CMS50IWLib.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/res/values/strings.xml
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/R.cs.flag
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Release/CMS50IWLib.CMS50IWLib-Signed.apk
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/uploadflags.txt
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/CMS50IWLib.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Release/CMS50IWLib.dll.mdb
