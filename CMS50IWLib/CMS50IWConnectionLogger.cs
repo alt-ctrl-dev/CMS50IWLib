@@ -35,8 +35,8 @@ namespace SpO2App.Droid
 			Log.Verbose(TAG, "ConnectionReset");
 		}
 
-		public void onLogEvent(long timeMs, String message) {
-			Log.Verbose(TAG, String.Format("{0} {1}", Util.DATE_FORMAT.Format(new Java.Util.Date(timeMs)), message));
+		public void onLogEvent(string timeMs, String message) {
+			Log.Verbose(TAG, String.Format("{0} {1}", timeMs, message));
 		}
 	}
 }

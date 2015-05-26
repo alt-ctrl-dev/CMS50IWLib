@@ -128,7 +128,7 @@ namespace SpO2App.Droid
      	 */
 		private void logEvent (string message)
 		{
-			cms50IWConnectionListener.onLogEvent (DateTime.Now.Millisecond, message);
+			cms50IWConnectionListener.onLogEvent (DateTime.Now.ToLongTimeString().ToString(), message);
 		}
 
 		/**
@@ -274,16 +274,20 @@ namespace SpO2App.Droid
 		{
 			try {
 				if (connectionAlive ()) {
-					//, 0, buffer.length
-					byte[] buffer = new byte[9] { 
-						CMS50IWCommand.COMMAND_FOLLOWS.asByte(), 
-						(byte)COMMAND_ONE_TWENTY_NINE, 
-						command.asByte(), 
-						dataByte.asByte(), 
-						CMS50IWCommand.PADDING.asByte(), 
-						CMS50IWCommand.PADDING.asByte(), 
-						CMS50IWCommand.PADDING.asByte(), 
-						CMS50IWCommand.PADDING.asByte(), 
+					//, 0, buffer.length						
+					byte[] buffer1 = new byte[1] { 
+						CMS50IWCommand.COMMAND_FOLLOWS.asByte()
+					};
+					byte[] buffer2 = new byte[1] {
+						(byte)COMMAND_ONE_TWENTY_NINE
+					};
+					byte[] buffer3 = new byte[1] {
+						command.asByte()
+					};
+					byte[] buffer4 = new byte[1] {
+						dataByte.asByte()
+					};
+					byte[] buffer5 = new byte[1] { 
 						CMS50IWCommand.PADDING.asByte()
 					};
 //					outputStream.Write (CMS50IWCommand.COMMAND_FOLLOWS.asInt ()); // mark the beginning of command bytes
@@ -295,7 +299,16 @@ namespace SpO2App.Droid
 //					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
 //					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
 //					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-					outputStream.Write(buffer, 0, buffer.Length);
+
+					outputStream.WriteByte(CMS50IWCommand.COMMAND_FOLLOWS.asByte());
+					outputStream.WriteByte((byte)COMMAND_ONE_TWENTY_NINE);
+					outputStream.WriteByte(command.asByte());
+					outputStream.WriteByte(dataByte.asByte());
+					outputStream.WriteByte(CMS50IWCommand.PADDING.asByte());
+					outputStream.WriteByte(CMS50IWCommand.PADDING.asByte());
+					outputStream.WriteByte(CMS50IWCommand.PADDING.asByte());
+					outputStream.WriteByte(CMS50IWCommand.PADDING.asByte());
+					outputStream.WriteByte(CMS50IWCommand.PADDING.asByte());
 					outputStream.Flush ();
 				} else {
 					Log.Warn (TAG, COULD_NOT_WRITE_COMMAND_MESSAGE);
@@ -402,6 +415,7 @@ namespace SpO2App.Droid
 								outerComponentRef.logEvent(BLUETOOTH_SOCKET_CONNECTED_SUCCESSFULLY_MESSAGE);
 								outerComponentRef.inputStream = outerComponentRef.bluetoothSocket.InputStream;
 								outerComponentRef.outputStream = outerComponentRef.bluetoothSocket.OutputStream;
+
 								outerComponentRef.logEvent(SET_REFERENCES_TO_INPUT_AND_OUTPUT_STREAMS_MESSAGE);
 								outerComponentRef.cms50IWConnectionListener.onConnectionEstablished();
 								outerComponentRef.logEvent(DISCOVERY_AND_CONNECTION_COMPLETE_MESSAGE);

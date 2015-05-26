@@ -53,7 +53,7 @@ namespace SpO2App.Droid
      * @param timeMs time stamp
      * @param message a message which the client or end user may wish to see logged
      */
-		void onLogEvent(long timeMs, String message);
+		void onLogEvent(string timeMs, String message);
 	}
 }
 

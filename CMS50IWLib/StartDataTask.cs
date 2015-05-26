@@ -1,6 +1,8 @@
 ﻿using System;
 using Android.Util;
 using Java.IO;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace SpO2App.Droid
 {
@@ -28,8 +30,9 @@ namespace SpO2App.Droid
 		private AndroidBluetoothConnectionComponents androidBluetoothConnectionComponents = null;
 		private ICMS50IWConnectionListener cms50FWConnectionListener = null;
 
-		public StartDataTask(AndroidBluetoothConnectionComponents androidBluetoothConnectionComponents) {
-			this.cms50FWConnectionListener = androidBluetoothConnectionComponents.getCMS50FWConnectionListener();
+		public StartDataTask (AndroidBluetoothConnectionComponents androidBluetoothConnectionComponents)
+		{
+			this.cms50FWConnectionListener = androidBluetoothConnectionComponents.getCMS50FWConnectionListener ();
 			this.androidBluetoothConnectionComponents = androidBluetoothConnectionComponents;
 		}
 
@@ -43,7 +46,8 @@ namespace SpO2App.Droid
      * preceded by a single boundary byte so that each data frame is considered
      * to be eight bytes long.
      */
-		private DataFrame getNextDataFrame() {
+		private async Task<DataFrame> getNextDataFrame ()
+		{
 
 			// separates each frame from previous frame
 			//noinspection UnusedAssignment
@@ -64,57 +68,69 @@ namespace SpO2App.Droid
 			if (androidBluetoothConnectionComponents.inputStream != null) {
 				try {
 					// create a new empty data frame, ready to be filled in
-					DataFrame dataFrame = new DataFrame();
-					Log.Debug(TAG,"Inside IF statement");
+					DataFrame dataFrame = new DataFrame ();
+					Log.Debug (TAG, "Inside IF statement");
 
-					// search the stream until the byte which signals the beginning of the next data frame is found
-					int counter = 1;
 					while (true) {
-						Log.Debug(TAG,"While true statement "+counter+", waiting for next byte");
-						byte frameBoundaryCandidate = waitForNextByte();
-						Log.Debug(TAG,"Byte received "+frameBoundaryCandidate);
-						if ((frameBoundaryCandidate & BIT_7) == BIT_7) { // look for next byte with the 7 bit set
-							//noinspection UnusedAssignment
-							Log.Debug(TAG,"Inside IF assign statement");
-							frameBoundary = frameBoundaryCandidate;
-							break;
-						}
-						counter++;
+						byte[] data = await waitForNextByte ();
+//						BitConverter.ToString(data)
+						Log.Info ("BEN", " Buffer length is " + data.Length);
+						Log.Info ("BEN", " Buffer output is " + BitConverter.ToString (data));
+						Log.Info ("BEN", "--------------------------------------------------------------------------");
 					}
-
-					// the next 7 bytes are the meaningful ones in the CMS50FW data stream
-					// but, in this code, byte2, byte7 and byte8 will not be used
-
-
-					Log.Debug(TAG,"AFTER While true statement "+counter+", waiting for next byte");
-					//noinspection UnusedAssignment
-					byte2 = waitForNextByte();
-
-					// bytes we actually use
-					byte3 = waitForNextByte();
-					byte4 = waitForNextByte();
-					byte5 = waitForNextByte();
-					byte6 = waitForNextByte();
-
-					//noinspection UnusedAssignment
-					byte7 = waitForNextByte();
-					//noinspection UnusedAssignment
-					byte8 = waitForNextByte();
-
-
-					Log.Debug(TAG,"Final data received.");
-
-					dataFrame.PulseWaveForm = (byte3 & BITS_ZERO_TO_SIX);
-					dataFrame.PulseIntensity = (byte4 & BITS_ZERO_TO_THREE);
-					dataFrame.PulseRate = (byte5 & BITS_ZERO_TO_SIX); // TODO: this does not allow pulseRate to be above 127.  But for lower values, it seems to be correct.
-					dataFrame.Spo2Percentage = (byte6 & BITS_ZERO_TO_SIX);
-					dataFrame.IsFingerOutOfSleeve = (dataFrame.PulseWaveForm == SIXTY_FOUR) &&
-						(dataFrame.PulseRate == ONE_TWENTY_SEVEN) && (dataFrame.Spo2Percentage == ONE_TWENTY_SEVEN);
+					// search the stream until the byte which signals the beginning of the next data frame is found
+//					while (true) {
+//						byte frameBoundaryCandidate = 
+//						Log.Info(TAG,"Byte received "+frameBoundaryCandidate.ToString("X2"));
+//						if ((frameBoundaryCandidate & BIT_7) == BIT_7) { // look for next byte with the 7 bit set
+//							//noinspection UnusedAssignment
+//							frameBoundary = frameBoundaryCandidate;
+//							Log.Info(TAG,"Inside IF assign statement | frameBoundary = " + frameBoundary.ToString("X2"));
+//								
+//							break;
+//						}
+//					}
+//
+//					// the next 7 bytes are the meaningful ones in the CMS50FW data stream
+//					// but, in this code, byte2, byte7 and byte8 will not be used
+//
+//
+////					Log.Debug(TAG,"AFTER While true statement "+counter+", waiting for next byte");
+//					//noinspection UnusedAssignment
+////					waitForNextByte();
+//					byte2 = await waitForNextByte();
+//
+//					// bytes we actually use
+//					byte3 = await waitForNextByte();
+//					byte4 = await waitForNextByte();
+//					byte5 = await waitForNextByte();
+//					byte6 = await waitForNextByte();
+//
+//					//noinspection UnusedAssignment
+//					byte7 = await waitForNextByte();
+//					//noinspection UnusedAssignment
+//					byte8 = await waitForNextByte();
+//
+//					Log.Info("BEN", " byte2 = " + byte2.ToString("X2"));
+//					Log.Info("BEN", " byte3 = " + byte3.ToString("X2"));
+//					Log.Info("BEN", " byte4 = " + byte4.ToString("X2"));
+//					Log.Info("BEN", " byte5 = " + byte5.ToString("X2"));
+//					Log.Info("BEN", " byte6 = " + byte6.ToString("X2"));
+//					Log.Info("BEN", " byte7 = " + byte7.ToString("X2"));
+//					Log.Info("BEN", " byte8 = " + byte8.ToString("X2"));
+//					Log.Info(TAG,"Final data received.");
+//
+//					dataFrame.PulseWaveForm = (byte3 & BITS_ZERO_TO_SIX);
+//					dataFrame.PulseIntensity = (byte4 & BITS_ZERO_TO_THREE);
+//					dataFrame.PulseRate = (byte5 & BITS_ZERO_TO_SIX); // TODO: this does not allow pulseRate to be above 127.  But for lower values, it seems to be correct.
+//					dataFrame.Spo2Percentage = (byte6 & BITS_ZERO_TO_SIX);
+//					dataFrame.IsFingerOutOfSleeve = (dataFrame.PulseWaveForm == SIXTY_FOUR) &&
+//						(dataFrame.PulseRate == ONE_TWENTY_SEVEN) && (dataFrame.Spo2Percentage == ONE_TWENTY_SEVEN);
 
 					return dataFrame;
 
-				} catch (IOException e) {
-					Log.Error(TAG, COULD_NOT_PUT_STREAMING_DATA_INTO_A_NEW_DATA_FRAME, e);
+				} catch (Java.IO.IOException e) {
+					Log.Error (TAG, COULD_NOT_PUT_STREAMING_DATA_INTO_A_NEW_DATA_FRAME, e);
 				}
 			}
 			return null;
@@ -128,24 +144,43 @@ namespace SpO2App.Droid
      * @throws IOException if the Bluetooth connection is unexpectedly closed or
      * the stream can't be read for some reason.
      */
-		private byte waitForNextByte()  {
+		private async Task<byte[]> waitForNextByte ()
+		{
 
 			try {
 				// It's important to check for a live connection frequently here because another thread
 				// might close connection, causing an IOException to be thrown from this code
 
 				//noinspection StatementWithEmptyBody
-				while (androidBluetoothConnectionComponents.connectionAlive() && androidBluetoothConnectionComponents.inputStream.CanRead) {
+//				int byteRead;
+				System.IO.Stream inStream = androidBluetoothConnectionComponents.inputStream;
+//				androidBluetoothConnectionComponents.bluetoothSocket.InputStream.;
+//				if (!inStream.CanRead){
+//					continue;
+//				}
+				while (androidBluetoothConnectionComponents.connectionAlive () && !inStream.CanRead && !inStream.IsDataAvailable()) {
 					// do nothing until a byte is available from input stream
-
-					Log.Debug(TAG,"Doing nothing while waiting for next byte");
+//					byteRead = androidBluetoothConnectionComponents.inputStream.ReadByte();
+					Log.Debug (TAG, "Doing nothing while waiting for next byte | CanRead = " + androidBluetoothConnectionComponents.inputStream.CanRead);
+				}//IsDataAvailable
+				byte[] result;
+				int length;
+//				using (FileStream SourceStream = File.Open(filename, FileMode.Open))
+//				{
+//					result = new byte[SourceStream.Length];
+//					await SourceStream.ReadAsync(result, 0, (int)SourceStream.Length);
+//				}
+				if (androidBluetoothConnectionComponents.connectionAlive ()) {
+//					androidBluetoothConnectionComponents.inputStream
+					//outerComponentRef.inputStream.ReadAsync();
+					length = (int)inStream.Length;
+					result = new byte[length];
+					await inStream.ReadAsync (result, 0, length);
+					return result;
 				}
-				if (androidBluetoothConnectionComponents.connectionAlive()) {
-					return (byte) androidBluetoothConnectionComponents.inputStream.ReadByte();
-				}
-
-				return 0;
-			} catch (IOException ex) {
+//
+				return new byte[1];
+			} catch (Java.IO.IOException ex) {
 				throw ex;
 			}
 
@@ -153,36 +188,37 @@ namespace SpO2App.Droid
 
 		public void Run ()
 		{
-			if (!androidBluetoothConnectionComponents.connectionAlive()) {
-				Util.log(cms50FWConnectionListener, ERROR_CONNECTION_IS_NOT_ALIVE_MESSAGE);
+			if (!androidBluetoothConnectionComponents.connectionAlive ()) {
+				Util.log (cms50FWConnectionListener, ERROR_CONNECTION_IS_NOT_ALIVE_MESSAGE);
 				return;
 			}
 
 			// allow client to know that work has begun. useful for disabling buttons, etc.
-			cms50FWConnectionListener.onDataReadAttemptInProgress();
+			cms50FWConnectionListener.onDataReadAttemptInProgress ();
 
 			// tell the manager it's ok to read data
 			androidBluetoothConnectionComponents.okToReadData = true;
 
 			try {
-				Util.log(cms50FWConnectionListener, BEGINNING_DATA_READ_OPERATIONS_MESSAGE);
+				Util.log (cms50FWConnectionListener, BEGINNING_DATA_READ_OPERATIONS_MESSAGE);
 
 				// writing to input stream in order to issue a command
-				androidBluetoothConnectionComponents.writeCommand(CMS50IWCommand.START_DATA);
-				Util.log(cms50FWConnectionListener, "BEN  | writeCommand done | androidBluetoothConnectionComponents.okToReadData = "+androidBluetoothConnectionComponents.okToReadData);
+				androidBluetoothConnectionComponents.writeCommand (CMS50IWCommand.START_DATA);
+				Util.log (cms50FWConnectionListener, "BEN  | writeCommand done | androidBluetoothConnectionComponents.okToReadData = " + androidBluetoothConnectionComponents.okToReadData);
 				while (androidBluetoothConnectionComponents.okToReadData) {
-					Util.log(cms50FWConnectionListener, "BEN  | waiting for data frame...");
-					cms50FWConnectionListener.onDataFrameArrived(getNextDataFrame());
-					Util.log(cms50FWConnectionListener, "BEN  | onDataFrameArrived done");
+					Util.log (cms50FWConnectionListener, "BEN  | waiting for data frame...");
+					var df = getNextDataFrame ();
+//					cms50FWConnectionListener.onDataFrameArrived (df as DataFrame);
+					Util.log (cms50FWConnectionListener, "BEN  | onDataFrameArrived done");
 				}
-			} catch (IOException ioe) {
-				Util.log(cms50FWConnectionListener, IO_EXCEPTION_WITH_INPUT_STREAM_OR_OUTPUT_STREAM_OBJECT_MESSAGE);
-				Log.Error(TAG, IO_EXCEPTION_WITH_INPUT_STREAM_OR_OUTPUT_STREAM_OBJECT_MESSAGE, ioe);
+			} catch (Java.IO.IOException ioe) {
+				Util.log (cms50FWConnectionListener, IO_EXCEPTION_WITH_INPUT_STREAM_OR_OUTPUT_STREAM_OBJECT_MESSAGE);
+				Log.Error (TAG, IO_EXCEPTION_WITH_INPUT_STREAM_OR_OUTPUT_STREAM_OBJECT_MESSAGE, ioe);
 			} finally {
-				Util.log(cms50FWConnectionListener, CONNECTION_TASK_COMPLETED_MESSAGE);
+				Util.log (cms50FWConnectionListener, CONNECTION_TASK_COMPLETED_MESSAGE);
 			}
 
-			cms50FWConnectionListener.onDataReadStopped();
+			cms50FWConnectionListener.onDataReadStopped ();
 		}
 	}
 }

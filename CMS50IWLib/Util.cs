@@ -29,7 +29,7 @@ namespace SpO2App.Droid
      * @param message any message which the client may wish to see logged
      */
 		public static void log(ICMS50IWConnectionListener listener, String message) {
-			listener.onLogEvent(DateTime.Now.Millisecond, message);
+			listener.onLogEvent(DateTime.Now.ToLongTimeString().ToString(), message);
 		}
 
 		public static String formatString(String format, Object obj1) {

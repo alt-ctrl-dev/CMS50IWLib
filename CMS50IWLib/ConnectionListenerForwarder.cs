@@ -9,7 +9,7 @@ namespace SpO2App.Droid
 		private readonly string TAG = "ConnectionListenerForwarder";
 		private ICMS50IWConnectionListener cms50IWConnectionListener = null;
 		private Handler handler = null;
-		private long timeMs;
+		private string timeMs;
 		private string message;
 		private DataFrame dataFrame;
 
@@ -102,7 +102,7 @@ namespace SpO2App.Droid
 			cms50IWConnectionListener.onConnectionReset ();
 		}
 
-		public void onLogEvent (long msTime, string msg)
+		public void onLogEvent (string msTime, string msg)
 		{
 			this.timeMs = msTime;
 			this.message = msg;
