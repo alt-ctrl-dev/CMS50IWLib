@@ -4,7 +4,7 @@ namespace SpO2App.Droid
 {
 	public class DataFrame
 	{
-		public readonly long time;
+		public readonly string time;
 
 		public int Spo2Percentage { get; set; }
 
@@ -24,7 +24,7 @@ namespace SpO2App.Droid
 
 		public DataFrame ()
 		{
-			time = DateTime.Now.Millisecond;
+			time = DateTime.Now.ToLongTimeString();
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace SpO2App.Droid
 {
 	public class CMS50IWBluetoothConnectionManager
 	{
-		private static readonly string TAG = "CMS50FWBluetoothConnectionManager";
+//		private static readonly string TAG = "CMS50FWBluetoothConnectionManager";
 		private static readonly int STAY_CONNECTED_PERIOD_SEC = 5;
 
 		private AndroidBluetoothConnectionComponents androidBluetoothConnectionComponents = null;

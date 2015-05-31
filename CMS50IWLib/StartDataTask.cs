@@ -46,7 +46,7 @@ namespace SpO2App.Droid
      * preceded by a single boundary byte so that each data frame is considered
      * to be eight bytes long.
      */
-		private async Task<DataFrame> getNextDataFrame ()
+		private DataFrame getNextDataFrame ()
 		{
 
 			// separates each frame from previous frame
@@ -71,25 +71,25 @@ namespace SpO2App.Droid
 					DataFrame dataFrame = new DataFrame ();
 					Log.Debug (TAG, "Inside IF statement");
 
-					while (true) {
-						byte[] data = await waitForNextByte ();
-//						BitConverter.ToString(data)
-						Log.Info ("BEN", " Buffer length is " + data.Length);
-						Log.Info ("BEN", " Buffer output is " + BitConverter.ToString (data));
-						Log.Info ("BEN", "--------------------------------------------------------------------------");
-					}
-					// search the stream until the byte which signals the beginning of the next data frame is found
 //					while (true) {
-//						byte frameBoundaryCandidate = 
-//						Log.Info(TAG,"Byte received "+frameBoundaryCandidate.ToString("X2"));
-//						if ((frameBoundaryCandidate & BIT_7) == BIT_7) { // look for next byte with the 7 bit set
-//							//noinspection UnusedAssignment
-//							frameBoundary = frameBoundaryCandidate;
-//							Log.Info(TAG,"Inside IF assign statement | frameBoundary = " + frameBoundary.ToString("X2"));
-//								
-//							break;
-//						}
+//						byte[] data = await waitForNextByte ();
+////						BitConverter.ToString(data)
+//						Log.Info ("BEN", " Buffer length is " + data.Length);
+//						Log.Info ("BEN", " Buffer output is " + BitConverter.ToString (data));
+//						Log.Info ("BEN", "--------------------------------------------------------------------------");
 //					}
+					// search the stream until the byte which signals the beginning of the next data frame is found
+					while (true) {
+						byte frameBoundaryCandidate = waitForNextByte ();
+						Log.Info(TAG,"Byte received "+frameBoundaryCandidate.ToString("X2"));
+						if ((frameBoundaryCandidate & BIT_7) == BIT_7) { // look for next byte with the 7 bit set
+							//noinspection UnusedAssignment
+							frameBoundary = frameBoundaryCandidate;
+							Log.Info(TAG,"Inside IF assign statement | frameBoundary = " + frameBoundary.ToString("X2"));
+								
+							break;
+						}
+					}
 //
 //					// the next 7 bytes are the meaningful ones in the CMS50FW data stream
 //					// but, in this code, byte2, byte7 and byte8 will not be used
@@ -98,34 +98,34 @@ namespace SpO2App.Droid
 ////					Log.Debug(TAG,"AFTER While true statement "+counter+", waiting for next byte");
 //					//noinspection UnusedAssignment
 ////					waitForNextByte();
-//					byte2 = await waitForNextByte();
-//
-//					// bytes we actually use
-//					byte3 = await waitForNextByte();
-//					byte4 = await waitForNextByte();
-//					byte5 = await waitForNextByte();
-//					byte6 = await waitForNextByte();
-//
-//					//noinspection UnusedAssignment
-//					byte7 = await waitForNextByte();
-//					//noinspection UnusedAssignment
-//					byte8 = await waitForNextByte();
-//
-//					Log.Info("BEN", " byte2 = " + byte2.ToString("X2"));
-//					Log.Info("BEN", " byte3 = " + byte3.ToString("X2"));
-//					Log.Info("BEN", " byte4 = " + byte4.ToString("X2"));
-//					Log.Info("BEN", " byte5 = " + byte5.ToString("X2"));
-//					Log.Info("BEN", " byte6 = " + byte6.ToString("X2"));
-//					Log.Info("BEN", " byte7 = " + byte7.ToString("X2"));
-//					Log.Info("BEN", " byte8 = " + byte8.ToString("X2"));
-//					Log.Info(TAG,"Final data received.");
-//
-//					dataFrame.PulseWaveForm = (byte3 & BITS_ZERO_TO_SIX);
-//					dataFrame.PulseIntensity = (byte4 & BITS_ZERO_TO_THREE);
-//					dataFrame.PulseRate = (byte5 & BITS_ZERO_TO_SIX); // TODO: this does not allow pulseRate to be above 127.  But for lower values, it seems to be correct.
-//					dataFrame.Spo2Percentage = (byte6 & BITS_ZERO_TO_SIX);
-//					dataFrame.IsFingerOutOfSleeve = (dataFrame.PulseWaveForm == SIXTY_FOUR) &&
-//						(dataFrame.PulseRate == ONE_TWENTY_SEVEN) && (dataFrame.Spo2Percentage == ONE_TWENTY_SEVEN);
+					byte2 = waitForNextByte();
+
+					// bytes we actually use
+					byte3 = waitForNextByte();
+					byte4 = waitForNextByte();
+					byte5 = waitForNextByte();
+					byte6 = waitForNextByte();
+
+					//noinspection UnusedAssignment
+					byte7 = waitForNextByte();
+					//noinspection UnusedAssignment
+					byte8 = waitForNextByte();
+
+					Log.Info("BEN", " byte2 = " + byte2.ToString("X2"));
+					Log.Info("BEN", " byte3 = " + byte3.ToString("X2"));
+					Log.Info("BEN", " byte4 = " + byte4.ToString("X2"));
+					Log.Info("BEN", " byte5 = " + byte5.ToString("X2"));
+					Log.Info("BEN", " byte6 = " + byte6.ToString("X2"));
+					Log.Info("BEN", " byte7 = " + byte7.ToString("X2"));
+					Log.Info("BEN", " byte8 = " + byte8.ToString("X2"));
+					Log.Info(TAG,"Final data received.");
+
+					dataFrame.PulseWaveForm = (byte3 & BITS_ZERO_TO_SIX);
+					dataFrame.PulseIntensity = (byte4 & BITS_ZERO_TO_THREE);
+					dataFrame.PulseRate = (byte5 & BITS_ZERO_TO_SIX); // TODO: this does not allow pulseRate to be above 127.  But for lower values, it seems to be correct.
+					dataFrame.Spo2Percentage = (byte6 & BITS_ZERO_TO_SIX);
+					dataFrame.IsFingerOutOfSleeve = (dataFrame.PulseWaveForm == SIXTY_FOUR) &&
+						(dataFrame.PulseRate == ONE_TWENTY_SEVEN) && (dataFrame.Spo2Percentage == ONE_TWENTY_SEVEN);
 
 					return dataFrame;
 
@@ -144,7 +144,7 @@ namespace SpO2App.Droid
      * @throws IOException if the Bluetooth connection is unexpectedly closed or
      * the stream can't be read for some reason.
      */
-		private async Task<byte[]> waitForNextByte ()
+		private byte waitForNextByte ()
 		{
 
 			try {
@@ -163,23 +163,19 @@ namespace SpO2App.Droid
 //					byteRead = androidBluetoothConnectionComponents.inputStream.ReadByte();
 					Log.Debug (TAG, "Doing nothing while waiting for next byte | CanRead = " + androidBluetoothConnectionComponents.inputStream.CanRead);
 				}//IsDataAvailable
-				byte[] result;
-				int length;
-//				using (FileStream SourceStream = File.Open(filename, FileMode.Open))
-//				{
-//					result = new byte[SourceStream.Length];
-//					await SourceStream.ReadAsync(result, 0, (int)SourceStream.Length);
-//				}
+				int result = -1;
+
 				if (androidBluetoothConnectionComponents.connectionAlive ()) {
 //					androidBluetoothConnectionComponents.inputStream
 					//outerComponentRef.inputStream.ReadAsync();
-					length = (int)inStream.Length;
-					result = new byte[length];
-					await inStream.ReadAsync (result, 0, length);
-					return result;
+//					length = (int)inStream.Length;
+//					result = new byte[length];
+					result = inStream.ReadByte();
+//					await inStream.ReadAsync (result, 0, length);
+//					return result;
 				}
 //
-				return new byte[1];
+				return (byte)result;
 			} catch (Java.IO.IOException ex) {
 				throw ex;
 			}
@@ -207,8 +203,8 @@ namespace SpO2App.Droid
 				Util.log (cms50FWConnectionListener, "BEN  | writeCommand done | androidBluetoothConnectionComponents.okToReadData = " + androidBluetoothConnectionComponents.okToReadData);
 				while (androidBluetoothConnectionComponents.okToReadData) {
 					Util.log (cms50FWConnectionListener, "BEN  | waiting for data frame...");
-					var df = getNextDataFrame ();
-//					cms50FWConnectionListener.onDataFrameArrived (df as DataFrame);
+//					var df = getNextDataFrame ();
+					cms50FWConnectionListener.onDataFrameArrived (getNextDataFrame ());
 					Util.log (cms50FWConnectionListener, "BEN  | onDataFrameArrived done");
 				}
 			} catch (Java.IO.IOException ioe) {

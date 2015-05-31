@@ -21,15 +21,15 @@ namespace SpO2App.Droid
 		private static readonly string INITIATING_BLUETOOTH_DISCOVERY_OF_CMS50_FW_DEVICE_MESSAGE = "Initiating bluetooth discovery of CMS50FW device.";
 		private static readonly string BLUETOOTH_IS_NOT_TURNED_ON_MESSAGE = "Could not start bluetooth discovery. Bluetooth is not in STATE_ON on this device";
 		private static readonly string JUST_STARTED_BLUETOOTH_DISCOVERY_MESSAGE = "Just started Bluetooth discovery";
-		private static readonly string COULD_NOT_WRITE_COMMAND_MESSAGE = "Could not write command %d to output stream. Bluetooth socket is not connected.";
+		private static readonly string COULD_NOT_WRITE_COMMAND_MESSAGE = "Could not write command {0} to output stream. Bluetooth socket is not connected.";
 		private static readonly string STARTING_RESET_MESSAGE = "Starting reset";
 		private static readonly string CLOSING_BLUETOOTH_SOCKET_AND_IO_STREAMS_MESSAGE = "Closing Bluetooth socket and I/O streams.";
 		private static readonly string OUTPUT_STREAM = "OutputStream";
 		private static readonly string INPUT_STREAM = "InputStream";
 		private static readonly string BLUETOOTH_SOCKET = "Bluetooth Socket";
 		private static readonly string RESET_COMPLETE_MESSAGE = "Reset complete";
-		private static readonly string CLOSED_FORMAT_STRING = "Closed %s";
-		private static readonly string COULD_NOT_CLOSE_FORMAT_STRING = "Could not close %s";
+		private static readonly string CLOSED_FORMAT_STRING = "Closed {0}";
+		private static readonly string COULD_NOT_CLOSE_FORMAT_STRING = "Could not close {0}";
 		private static readonly UUID DEFAULT_BLUETOOTH_SERVICE_UUID = UUID.FromString ("00001101-0000-1000-8000-00805F9B34FB");
 		private static readonly string COULD_NOT_UNREGISTER_BROADCAST_RECEIVER_PROCEEDING_ANYWAY_MESSAGE = "Could not unregister BroadcastReceiver because it was apparently never registered. Proceeding anyway.";
 		private UUID bluetoothServiceUUID = DEFAULT_BLUETOOTH_SERVICE_UUID;
@@ -274,32 +274,6 @@ namespace SpO2App.Droid
 		{
 			try {
 				if (connectionAlive ()) {
-					//, 0, buffer.length						
-					byte[] buffer1 = new byte[1] { 
-						CMS50IWCommand.COMMAND_FOLLOWS.asByte()
-					};
-					byte[] buffer2 = new byte[1] {
-						(byte)COMMAND_ONE_TWENTY_NINE
-					};
-					byte[] buffer3 = new byte[1] {
-						command.asByte()
-					};
-					byte[] buffer4 = new byte[1] {
-						dataByte.asByte()
-					};
-					byte[] buffer5 = new byte[1] { 
-						CMS50IWCommand.PADDING.asByte()
-					};
-//					outputStream.Write (CMS50IWCommand.COMMAND_FOLLOWS.asInt ()); // mark the beginning of command bytes
-//					outputStream.Write (COMMAND_ONE_TWENTY_NINE);                // 0x81 - not sure what this is
-//					outputStream.Write (command.asInt ());                        // the actual command
-//					outputStream.Write (dataByte.asInt ());                       // sometimes a particular byte must follow the command, but not always
-//					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-//					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-//					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-//					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-//					outputStream.Write (CMS50IWCommand.PADDING.asInt ());
-
 					outputStream.WriteByte(CMS50IWCommand.COMMAND_FOLLOWS.asByte());
 					outputStream.WriteByte((byte)COMMAND_ONE_TWENTY_NINE);
 					outputStream.WriteByte(command.asByte());
@@ -344,9 +318,9 @@ namespace SpO2App.Droid
      */
 		private class CMS50IWBroadcastReceiver: BroadcastReceiver {
 
-			private static readonly string ATTEMPTING_TO_CONNECT_TO_CMS50FW_MESSAGE = "Attempting to connect to CMS50FW.";
-			private static readonly string RETRIEVING_UUIDS_FROM_BLUETOOTH_DEVICE_FORMAT = "Retrieving UUIDs from BluetoothDevice: Name:%s, Address:%s, BluetoothClass:%s";
-			private static readonly string RETRIEVED_UUID_FROM_CMS50_FW_WILL_USE_MESSAGE = "Retrieved UUID from CMS50FW. Will use this UUID instead of default:";
+			private static readonly string ATTEMPTING_TO_CONNECT_TO_CMS50FW_MESSAGE = "Attempting to connect to CMS50IW.";
+			private static readonly string RETRIEVING_UUIDS_FROM_BLUETOOTH_DEVICE_FORMAT = "Retrieving UUIDs from BluetoothDevice: Name:{0}, Address:{1}, BluetoothClass:{2}";
+			private static readonly string RETRIEVED_UUID_FROM_CMS50_FW_WILL_USE_MESSAGE = "Retrieved UUID from CMS50IW. Will use this UUID instead of default:";
 			private static readonly string ATTEMPTING_TO_GET_NEW_BLUETOOTH_SOCKET_TO_CMS50_FW_DEVICE_MESSAGE = "Attempting to get new bluetoothSocket to CMS50FW device";
 			private static readonly string ATTEMPTING_TO_CONNECT_ON_BLUETOOTH_SOCKET_MESSAGE = "Attempting to connect on bluetoothSocket";
 			private static readonly string BLUETOOTH_SOCKET_CONNECTED_SUCCESSFULLY_MESSAGE = "BluetoothSocket connected successfully.";
@@ -355,7 +329,7 @@ namespace SpO2App.Droid
 			private static readonly string IO_EXCEPTION_TRYING_TO_GET_AND_CONNECT_BLUETOOTH_SOCKET_MESSAGE = "IOException trying to get and connect BluetoothSocket";
 			private static readonly string ERROR_CONNECT_ATTEMPT_FAILED_PLEASE_TRY_AGAIN_MESSAGE = "Error: connect attempt failed. Please try again.";
 			private static readonly string A_BLUETOOTH_DEVICE_HAS_BEEN_FOUND_MESSAGE = "A Bluetooth device has been found.";
-			private static readonly string BLUETOOTH_DEVICE_FOUND_FORMAT = "BluetoothDevice found: Name:%s, Address:%s, BluetoothClass:%s";
+			private static readonly string BLUETOOTH_DEVICE_FOUND_FORMAT = "BluetoothDevice found: Name:{0}, Address:{1}, BluetoothClass:{2}";
 			private static readonly string CMS50FW_BLUETOOTH_DEVICE_FOUND_MESSAGE = "The Bluetooth device found is the CMS50FW";
 			AndroidBluetoothConnectionComponents outerComponentRef;
 

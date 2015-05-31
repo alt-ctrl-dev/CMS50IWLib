@@ -6,7 +6,7 @@ namespace SpO2App.Droid
 {
 	public class ConnectionListenerForwarder:ICMS50IWConnectionListener
 	{
-		private readonly string TAG = "ConnectionListenerForwarder";
+//		private readonly string TAG = "ConnectionListenerForwarder";
 		private ICMS50IWConnectionListener cms50IWConnectionListener = null;
 		private Handler handler = null;
 		private string timeMs;
