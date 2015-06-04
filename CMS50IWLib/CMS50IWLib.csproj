@@ -51,12 +51,12 @@
     <Compile Include="CMS50IWConnectionLogger.cs" />
     <Compile Include="ConnectionListenerForwarder.cs" />
     <Compile Include="DataFrame.cs" />
-    <Compile Include="ICMS50IWConnectionListener.cs" />
     <Compile Include="KeepAliveTask.cs" />
     <Compile Include="ResetTask.cs" />
     <Compile Include="StartDataTask.cs" />
     <Compile Include="StopDataTask.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="ICMS50IWConnectionListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
