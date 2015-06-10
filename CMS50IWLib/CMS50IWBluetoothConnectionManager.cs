@@ -4,10 +4,13 @@ using Java.IO;
 using Android.Bluetooth;
 using Android.Content;
 using Java.Util.Concurrent;
+using SpO2App.Interface;
+using SpO2App.Exceptions;
+using SpO2App.Datamodel;
 
 namespace SpO2App.Droid
 {
-	public class CMS50IWBluetoothConnectionManager
+	public class CMS50IWBluetoothConnectionManager:ICMS50IWBluetoothConnectionManager
 	{
 //		private static readonly string TAG = "CMS50FWBluetoothConnectionManager";
 		private static readonly int STAY_CONNECTED_PERIOD_SEC = 5;
@@ -35,36 +38,28 @@ namespace SpO2App.Droid
 				this.cms50FWConnectionListener, bluetoothName);
 		}
 
-		/**
-     * Set the custom instance of {@link com.albertcbraun.cms50fwlib.CMS50FWConnectionListener} for your
-     * app here. This is really useful because it informs your app about the state
-     * of the bluetooth adapter, connection, progress reading data, etc.
-     *
-     * @param cms50FWConnectionListener a custom implementation
-     *                                  of {@link com.albertcbraun.cms50fwlib.CMS50FWConnectionListener}
-     */
-		public void setCMS50FWConnectionListener(ICMS50IWConnectionListener cms50FWConnectionListener) {
-			this.cms50FWConnectionListener = new ConnectionListenerForwarder(cms50FWConnectionListener);
-			this.androidBluetoothConnectionComponents.setCms50FWConnectionListener(this.cms50FWConnectionListener);
+		public void connect ()
+		{
+			this._connect (Android.App.Application.Context);
 		}
 
-		/**
-     * Most methods create tasks which are run and executed on
-     * various executors. These methods are typically invoked from
-     * the UI thread. A general rule in these methods is to shutdown executors
-     * in the UI thread, but then submit Bluetooth component altering tasks to a
-     * worker thread.
-     **/
+		public void close ()
+		{
+			this.dispose (Android.App.Application.Context);
+		}
 
-		/**
-		* Invoke Bluetooth discovery, wait for it to finish, and then obtain a
-			* Bluetooth socket and connect to the main Bluetooth service on the CMS50FW bluetooth device. Also
-			* obtains IO streams. (These Bluetooth plumbing details are handled internally
-				* so that you do not have to be aware of them.) After a successful
-			* connection, as indicated by the callback {@link CMS50FWConnectionListener#onConnectionEstablished()},
-		* your app can call {@link #startData()}. This occurs on the UI thread.
-		*/
-		public void connect(Context context) {
+		public void setCMS50IWConnectionListener (ICMS50IWConnectionListener cMS50IWCallbacks)
+		{
+			this.cms50FWConnectionListener = cMS50IWCallbacks;//new ConnectionListenerForwarder(cMS50IWCallbacks);
+			this.androidBluetoothConnectionComponents.setCms50FWConnectionListener(this.cms50FWConnectionListener);
+		}
+			
+		private void _setCMS50FWConnectionListener(ICMS50IWConnectionListener cms50FWConnectionListener) {
+//			this.cms50FWConnectionListener = new ConnectionListenerForwarder(cms50FWConnectionListener);
+//			this.androidBluetoothConnectionComponents.setCms50FWConnectionListener(this.cms50FWConnectionListener);
+		}
+			
+		private void _connect(Context context) {
 			try {
 				androidBluetoothConnectionComponents.findAndConnect(context);
 			} catch (BluetoothNotAvailableException btNotAvailex) {
@@ -105,8 +100,20 @@ namespace SpO2App.Droid
      */
 		public void stopData() {
 			Util.safeShutdown(keepAliveExecutor);
+			Util.safeShutdown(readDataExecutor);
 			keepAliveTaskRunning = false;
-			submitToGeneralExecutor(new StopDataTask(androidBluetoothConnectionComponents));
+//			submitToGeneralExecutor(new StopDataTask(androidBluetoothConnectionComponents));
+			androidBluetoothConnectionComponents.okToReadData = false;
+			if (androidBluetoothConnectionComponents.connectionAlive()) {
+				try {
+					androidBluetoothConnectionComponents.writeCommand(CMS50IWCommand.STOP_DATA);
+					Util.log(androidBluetoothConnectionComponents.getCMS50FWConnectionListener(), "Wrote stop command");
+				} catch (Java.IO.IOException e) {
+					Android.Util.Log.Error("BluetoothConnectionManager", "Could not write stop", e);
+				}
+			} else {
+				Util.log(androidBluetoothConnectionComponents.getCMS50FWConnectionListener(), "Best to reset");
+			}
 		}
 
 		/**
@@ -119,14 +126,15 @@ namespace SpO2App.Droid
      */
 		public void reset() {
 			stopData();
-			submitToGeneralExecutor(new ResetTask(androidBluetoothConnectionComponents));
+			androidBluetoothConnectionComponents.reset ();
+//			submitToGeneralExecutor(new ResetTask(androidBluetoothConnectionComponents));
 		}
 
 		/**
      * Shutdown and dispose of the executors and the
      * bluetooth connection manager object.
      */
-		public void dispose(Context context) {
+		private void dispose(Context context) {
 			Util.safeShutdown(keepAliveExecutor);
 			Util.safeShutdown(readDataExecutor);
 			Util.safeShutdown(generalPurposeExecutor);

@@ -3,6 +3,8 @@ using Android.Util;
 using Java.IO;
 using System.Threading.Tasks;
 using System.IO;
+using SpO2App.Interface;
+using SpO2App.Datamodel;
 
 namespace SpO2App.Droid
 {
@@ -68,17 +70,9 @@ namespace SpO2App.Droid
 			if (androidBluetoothConnectionComponents.inputStream != null) {
 				try {
 					// create a new empty data frame, ready to be filled in
-					DataFrame dataFrame = new DataFrame ();
+
 					Log.Debug (TAG, "Inside IF statement");
 
-//					while (true) {
-//						byte[] data = await waitForNextByte ();
-////						BitConverter.ToString(data)
-//						Log.Info ("BEN", " Buffer length is " + data.Length);
-//						Log.Info ("BEN", " Buffer output is " + BitConverter.ToString (data));
-//						Log.Info ("BEN", "--------------------------------------------------------------------------");
-//					}
-					// search the stream until the byte which signals the beginning of the next data frame is found
 					while (true) {
 						byte frameBoundaryCandidate = waitForNextByte ();
 						Log.Info(TAG,"Byte received "+frameBoundaryCandidate.ToString("X2"));
@@ -90,14 +84,7 @@ namespace SpO2App.Droid
 							break;
 						}
 					}
-//
-//					// the next 7 bytes are the meaningful ones in the CMS50FW data stream
-//					// but, in this code, byte2, byte7 and byte8 will not be used
-//
-//
-////					Log.Debug(TAG,"AFTER While true statement "+counter+", waiting for next byte");
-//					//noinspection UnusedAssignment
-////					waitForNextByte();
+
 					byte2 = waitForNextByte();
 
 					// bytes we actually use
@@ -111,15 +98,9 @@ namespace SpO2App.Droid
 					//noinspection UnusedAssignment
 					byte8 = waitForNextByte();
 
-					Log.Info("BEN", " byte2 = " + byte2.ToString("X2"));
-					Log.Info("BEN", " byte3 = " + byte3.ToString("X2"));
-					Log.Info("BEN", " byte4 = " + byte4.ToString("X2"));
-					Log.Info("BEN", " byte5 = " + byte5.ToString("X2"));
-					Log.Info("BEN", " byte6 = " + byte6.ToString("X2"));
-					Log.Info("BEN", " byte7 = " + byte7.ToString("X2"));
-					Log.Info("BEN", " byte8 = " + byte8.ToString("X2"));
 					Log.Info(TAG,"Final data received.");
 
+					DataFrame dataFrame = new DataFrame ();
 					dataFrame.PulseWaveForm = (byte3 & BITS_ZERO_TO_SIX);
 					dataFrame.PulseIntensity = (byte4 & BITS_ZERO_TO_THREE);
 					dataFrame.PulseRate = (byte5 & BITS_ZERO_TO_SIX); // TODO: this does not allow pulseRate to be above 127.  But for lower values, it seems to be correct.
@@ -151,30 +132,16 @@ namespace SpO2App.Droid
 				// It's important to check for a live connection frequently here because another thread
 				// might close connection, causing an IOException to be thrown from this code
 
-				//noinspection StatementWithEmptyBody
-//				int byteRead;
-				System.IO.Stream inStream = androidBluetoothConnectionComponents.inputStream;
-//				androidBluetoothConnectionComponents.bluetoothSocket.InputStream.;
-//				if (!inStream.CanRead){
-//					continue;
-//				}
+				Stream inStream = androidBluetoothConnectionComponents.inputStream;
+
 				while (androidBluetoothConnectionComponents.connectionAlive () && !inStream.CanRead && !inStream.IsDataAvailable()) {
 					// do nothing until a byte is available from input stream
-//					byteRead = androidBluetoothConnectionComponents.inputStream.ReadByte();
 					Log.Debug (TAG, "Doing nothing while waiting for next byte | CanRead = " + androidBluetoothConnectionComponents.inputStream.CanRead);
-				}//IsDataAvailable
-				int result = -1;
-
-				if (androidBluetoothConnectionComponents.connectionAlive ()) {
-//					androidBluetoothConnectionComponents.inputStream
-					//outerComponentRef.inputStream.ReadAsync();
-//					length = (int)inStream.Length;
-//					result = new byte[length];
-					result = inStream.ReadByte();
-//					await inStream.ReadAsync (result, 0, length);
-//					return result;
 				}
-//
+				int result = -1;
+				if (androidBluetoothConnectionComponents.connectionAlive ()) {
+					result = inStream.ReadByte();
+				}
 				return (byte)result;
 			} catch (Java.IO.IOException ex) {
 				throw ex;

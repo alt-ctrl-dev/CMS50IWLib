@@ -10,3 +10,13 @@
 /Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/uploadflags.txt
 /Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/CMS50IWLib.dll
 /Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/obj/Debug/CMS50IWLib.dll.mdb
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/SpO2App.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/SpO2App.dll.mdb
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/Xamarin.Forms.Core.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/SQLite-net.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/Microsoft.Practices.ServiceLocation.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/GalaSoft.MvvmLight.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/Xamarin.Forms.Xaml.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/GalaSoft.MvvmLight.Extras.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/SQLitePCL.raw.dll
+/Users/reubenkeithcoutinho/Projects/CMS50IWLib/CMS50IWLib/bin/Debug/System.Text.RegularExpressions.dll

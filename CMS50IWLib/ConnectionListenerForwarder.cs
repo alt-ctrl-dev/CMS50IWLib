@@ -1,6 +1,8 @@
 ﻿using System;
 using Android.OS;
 using Java.Lang;
+using SpO2App.Interface;
+using SpO2App.Datamodel;
 
 namespace SpO2App.Droid
 {
@@ -17,6 +19,11 @@ namespace SpO2App.Droid
 		{
 			this.cms50IWConnectionListener = cms50iWConnectionListener;
 			this.handler = new Handler (Looper.MainLooper);
+		}
+
+		public void onDeviceFound ()
+		{
+//			throw new NotImplementedException ();
 		}
 
 		private void postToUIThread (IRunnable runnable)

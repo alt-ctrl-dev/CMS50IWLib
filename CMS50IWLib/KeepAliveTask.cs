@@ -1,5 +1,7 @@
 ﻿using System;
 using Android.Util;
+using SpO2App.Interface;
+using SpO2App.Datamodel;
 
 namespace SpO2App.Droid
 {

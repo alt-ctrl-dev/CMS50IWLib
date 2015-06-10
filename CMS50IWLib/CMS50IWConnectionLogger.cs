@@ -1,11 +1,18 @@
 ﻿using System;
 using Android.Util;
+using SpO2App.Interface;
+using SpO2App.Datamodel;
 
 namespace SpO2App.Droid
 {
 	public class CMS50IWConnectionLogger:ICMS50IWConnectionListener
 	{
 		private static readonly String TAG = "CMS50FWConnectionLogger";
+
+		public void onDeviceFound ()
+		{
+//			throw new NotImplementedException ();
+		}
 
 		public void onConnectionAttemptInProgress() {
 			Log.Verbose(TAG, "ConnectionAttemptInProgress");

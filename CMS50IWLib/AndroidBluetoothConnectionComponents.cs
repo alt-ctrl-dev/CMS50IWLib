@@ -6,7 +6,9 @@ using Android.OS;
 using Android.Util;
 using System.IO;
 using Java.IO;
-
+using SpO2App.Interface;
+using SpO2App.Datamodel;
+using SpO2App.Exceptions;
 
 namespace SpO2App.Droid
 {
@@ -24,8 +26,6 @@ namespace SpO2App.Droid
 		private static readonly string COULD_NOT_WRITE_COMMAND_MESSAGE = "Could not write command {0} to output stream. Bluetooth socket is not connected.";
 		private static readonly string STARTING_RESET_MESSAGE = "Starting reset";
 		private static readonly string CLOSING_BLUETOOTH_SOCKET_AND_IO_STREAMS_MESSAGE = "Closing Bluetooth socket and I/O streams.";
-		private static readonly string OUTPUT_STREAM = "OutputStream";
-		private static readonly string INPUT_STREAM = "InputStream";
 		private static readonly string BLUETOOTH_SOCKET = "Bluetooth Socket";
 		private static readonly string RESET_COMPLETE_MESSAGE = "Reset complete";
 		private static readonly string CLOSED_FORMAT_STRING = "Closed {0}";
@@ -46,14 +46,6 @@ namespace SpO2App.Droid
 		public volatile Stream inputStream  = null;
 		public volatile bool okToReadData;
 
-		/**
-     * Registers a default, logging-only, CMS50FWConnectionListener which you
-     * should replace later, using {@link #setCms50FWConnectionListener(CMS50FWConnectionListener)}.
-     *
-     * @param cms50FWBluetoothConnectionManager the front end of this framework
-     * @param cms50FWConnectionListener callbacks for the client app
-     * @param androidBluetoothDeviceName the string which represents the name of the bluetooth device we're looking for (e.g. "SpO202")
-     */
 		public	AndroidBluetoothConnectionComponents (CMS50IWBluetoothConnectionManager cms50iWBluetoothConnectionManager,
 		                                             ICMS50IWConnectionListener cms50iWConnectionListener,
 		                                             string androidBtDeviceName)
@@ -64,22 +56,12 @@ namespace SpO2App.Droid
 
 		}
 
-		/*
-		 * Cleans up bluetooth connections, sockets, streams, etc.
-		 */
 		public void dispose (Context context)
 		{
 			unregisterBroadcastReceiver (context);
 			reset ();
 		}
 
-		/**
-		 * 
-     	 * Allows the BroadcastReceiver to unregister itself after it has completed
-     	 * its work.
-     	 *
-     	 * @param context a {@link Context} used temporarily and then discarded
-     	 */
 		public void unregisterBroadcastReceiver (Context context)
 		{
 			if (broadcastReceiver != null && broadcastReceiverIsRegistered) {
@@ -91,11 +73,7 @@ namespace SpO2App.Droid
 				broadcastReceiverIsRegistered = false;
 			}
 		}
-
-		/**
-     	 * Bring the Bluetooth plumbing back to the state it was in before the
-     	 * CMS50FW device was discovered and a connection to it was opened.
-     	 */
+			
 		public void reset ()
 		{
 			logEvent (STARTING_RESET_MESSAGE);
@@ -106,10 +84,12 @@ namespace SpO2App.Droid
 			logEvent (CLOSING_BLUETOOTH_SOCKET_AND_IO_STREAMS_MESSAGE);
 			if (bluetoothAdapter != null && bluetoothAdapter.IsEnabled &&
 			    bluetoothSocket != null && bluetoothSocket.IsConnected) {
-				close ((ICloseable)outputStream, OUTPUT_STREAM);
+				outputStream.Close ();
 				outputStream = null;
-				close ((ICloseable)inputStream, INPUT_STREAM);
+				logEvent ("Closed Output Stream");
+				inputStream.Close ();
 				inputStream = null;
+				logEvent ("Closed Input Stream");
 				close (bluetoothSocket, BLUETOOTH_SOCKET);
 				bluetoothSocket = null;
 			}
@@ -128,7 +108,7 @@ namespace SpO2App.Droid
      	 */
 		private void logEvent (string message)
 		{
-			cms50IWConnectionListener.onLogEvent (DateTime.Now.ToLongTimeString().ToString(), message);
+			cms50IWConnectionListener.onLogEvent (DateTime.Now.ToLongTimeString (), message);
 		}
 
 		/**
@@ -168,7 +148,7 @@ namespace SpO2App.Droid
      	 */
 		public void setCms50FWConnectionListener (ICMS50IWConnectionListener cms50iWConnectionListener)
 		{
-			this.cms50IWConnectionListener = new ConnectionListenerForwarder (cms50iWConnectionListener);
+			this.cms50IWConnectionListener = cms50iWConnectionListener;
 		}
 
 		/**

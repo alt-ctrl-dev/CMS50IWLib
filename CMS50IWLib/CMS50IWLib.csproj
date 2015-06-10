@@ -44,19 +44,14 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="AndroidBluetoothConnectionComponents.cs" />
-    <Compile Include="BluetoothNotAvailableException.cs" />
-    <Compile Include="BluetoothNotEnabledException.cs" />
     <Compile Include="CMS50IWBluetoothConnectionManager.cs" />
-    <Compile Include="CMS50IWCommand.cs" />
     <Compile Include="CMS50IWConnectionLogger.cs" />
     <Compile Include="ConnectionListenerForwarder.cs" />
-    <Compile Include="DataFrame.cs" />
     <Compile Include="KeepAliveTask.cs" />
     <Compile Include="ResetTask.cs" />
     <Compile Include="StartDataTask.cs" />
     <Compile Include="StopDataTask.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="ICMS50IWConnectionListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -65,4 +60,10 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\SpO2App\SpO2App\SpO2App.csproj">
+      <Project>{3F6D9A76-7A1E-473B-ACA7-48226FB0ACE6}</Project>
+      <Name>SpO2App</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
